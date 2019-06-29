@@ -1,6 +1,6 @@
 ﻿namespace InMemoryDatabase.Setup
 {
-    using InMemoryDatabase.Interfaces;
+    using InMemoryDatabase.Implementations;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class SetupCollections

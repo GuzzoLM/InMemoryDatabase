@@ -1,12 +1,8 @@
-﻿namespace InMemoryDatabase
+﻿namespace InMemoryDatabase.Implementations
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
-    using InMemoryDatabase.Exceptions;
-    using InMemoryDatabase.Attributes;
-    using InMemoryDatabase.Interfaces;
     using InMemoryDatabase.Extensions;
 
     internal class InMemoryCollection<T> : IInMemoryCollection<T>

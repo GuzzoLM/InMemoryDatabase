@@ -54,7 +54,7 @@
             return ((IdentifierAttribute)Attribute.GetCustomAttribute(prop, typeof(IdentifierAttribute))).Order;
         }
 
-        private static Func<object, string>GetPropertyAccessor(PropertyInfo prop)
+        private static Func<object, string> GetPropertyAccessor(PropertyInfo prop)
         {
             return x => prop.GetValue(x).ToString();
         }
