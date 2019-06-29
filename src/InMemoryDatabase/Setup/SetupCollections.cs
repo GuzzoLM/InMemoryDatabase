@@ -7,9 +7,7 @@
     {
         public static IServiceCollection SetupInMemoryCollection<T>(this IServiceCollection services)
         {
-            var collection = new InMemoryCollection<T>();
-            services.AddSingleton<IInMemoryCollection<T>>(collection);
-            return services;
+            return services.AddSingleton<IInMemoryCollection<T>, InMemoryCollection<T>>();
         }
     }
 }
