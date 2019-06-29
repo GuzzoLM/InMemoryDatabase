@@ -5,16 +5,16 @@
     using System.Linq;
     using System.Reflection;
     using InMemoryDatabase.Exceptions;
-    using InMemoryDatabase.Identifier;
+    using InMemoryDatabase.Attributes;
     using InMemoryDatabase.Interfaces;
 
-    public class MemoryCollection<T> : IInMemoryCollection<T>
+    internal class InMemoryCollection<T> : IInMemoryCollection<T>
     {
         private IDictionary<string, T> _data { get; set; }
 
         private IList<Func<T, string>> _idGenerator { get; set; }
 
-        public MemoryCollection()
+        public InMemoryCollection()
         {
             _data = new Dictionary<string, T>();
             _idGenerator = GetIdGenerator();
@@ -119,6 +119,13 @@
             if (properties.Count > 0)
             {
                 throw new InvalidIdentityException(message, properties.ToArray());
+            }
+
+            message = "Class must have an Identifier";
+
+            if (props.SelectMany(x => x.Value).Count() < 1)
+            {
+                throw new InvalidIdentityException(message);
             }
         }
     }
