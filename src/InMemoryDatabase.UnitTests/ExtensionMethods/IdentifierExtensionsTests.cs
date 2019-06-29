@@ -10,25 +10,28 @@
     public class IdentifierExtensionsTests
     {
         [Fact]
-        public void GetIdentifier_ClassWithOneIdProperty_ShouldPass()
+        public void GetIdentifier_ClassWithOneIdProperty_ShouldReturnId()
         {
             // Arrange
+            var id = Guid.NewGuid();
+
             var entity = new ClassWithOneIdentifier
             {
-                Id = Guid.NewGuid(),
+                Id = id,
                 Name = "Lucas"
             };
 
+            var expectedId = id.ToString();
+
             // Act
-            Action act = () => entity.GetIdentifier();
+            var resultedId = entity.GetIdentifier();
 
             // Assert
-            act.Should()
-                .NotThrow();
+            resultedId.Should().Be(expectedId);
         }
 
         [Fact]
-        public void GetIdentifier_ClassWithTwoIdProperty_ShouldPass()
+        public void GetIdentifier_ClassWithTwoIdProperty_ShouldReturnId()
         {
             // Arrange
             var entity = new ClassWithTwoIdentifiers
@@ -37,12 +40,13 @@
                 LastName = "Poley"
             };
 
+            var expectedId = "Lucas-Poley";
+
             // Act
-            Action act = () => entity.GetIdentifier();
+            var resultedId = entity.GetIdentifier();
 
             // Assert
-            act.Should()
-                .NotThrow();
+            resultedId.Should().Be(expectedId);
         }
 
         [Fact]
