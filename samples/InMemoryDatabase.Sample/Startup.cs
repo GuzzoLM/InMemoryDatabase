@@ -1,6 +1,8 @@
 ﻿namespace InMemoryDatabase.Sample
 {
     using InMemoryDatabase.Sample.Models;
+    using InMemoryDatabase.Sample.Repositories;
+    using InMemoryDatabase.Sample.Repositories.Implementation;
     using InMemoryDatabase.Setup;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -22,6 +24,13 @@
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.SetupInMemoryCollection<Student>();
+            services.AddTransient<IStudentRepository, StudentRepository>();
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +44,19 @@
             {
                 app.UseHsts();
             }
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty;
+            });
+
+            app.UseMvc();
 
             app.UseHttpsRedirection();
             app.UseMvc();
