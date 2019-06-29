@@ -4,7 +4,7 @@
     using FluentAssertions;
     using InMemoryDatabase.Exceptions;
     using InMemoryDatabase.Extensions;
-    using InMemoryDatabase.Identifier;
+    using InMemoryDatabase.Attributes;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;
 

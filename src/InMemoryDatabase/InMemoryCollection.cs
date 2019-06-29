@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using InMemoryDatabase.Exceptions;
-    using InMemoryDatabase.Identifier;
+    using InMemoryDatabase.Attributes;
     using InMemoryDatabase.Interfaces;
 
     internal class InMemoryCollection<T> : IInMemoryCollection<T>

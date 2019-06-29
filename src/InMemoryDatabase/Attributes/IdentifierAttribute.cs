@@ -1,4 +1,4 @@
-﻿namespace InMemoryDatabase.Identifier
+﻿namespace InMemoryDatabase.Attributes
 {
     using System;
 
