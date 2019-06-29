@@ -8,13 +8,13 @@
     using InMemoryDatabase.Identifier;
     using InMemoryDatabase.Interfaces;
 
-    public class MemoryCollection<T> : IInMemoryCollection<T>
+    internal class InMemoryCollection<T> : IInMemoryCollection<T>
     {
         private IDictionary<string, T> _data { get; set; }
 
         private IList<Func<T, string>> _idGenerator { get; set; }
 
-        public MemoryCollection()
+        public InMemoryCollection()
         {
             _data = new Dictionary<string, T>();
             _idGenerator = GetIdGenerator();
