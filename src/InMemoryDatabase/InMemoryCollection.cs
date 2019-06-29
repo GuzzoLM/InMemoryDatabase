@@ -120,6 +120,13 @@
             {
                 throw new InvalidIdentityException(message, properties.ToArray());
             }
+
+            message = "Class must have an Identifier";
+
+            if (props.SelectMany(x => x.Value).Count() < 1)
+            {
+                throw new InvalidIdentityException(message);
+            }
         }
     }
 }
