@@ -59,6 +59,11 @@
             _data.Remove(id);
         }
 
+        public T Get(string id)
+        {
+            return _data[id];
+        }
+
         private string GetId(T entity)
         {
             return IdentifierExtensions.GetId(_idGenerator, entity);

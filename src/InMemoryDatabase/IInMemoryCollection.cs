@@ -9,6 +9,8 @@
 
         T Update(T entity);
 
+        T Get(string id);
+
         IEnumerable<T> Where(Func<T, bool> filter);
 
         IEnumerable<T> All();
