@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using InMemoryDatabase.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace InMemoryDatabase.Extensions
+﻿namespace InMemoryDatabase.Extensions
 {
+    using InMemoryDatabase.Interfaces;
+    using Microsoft.Extensions.DependencyInjection;
+
     public static class SetupCollections
     {
         public static IServiceCollection SetupInMemoryCollection<T>(this IServiceCollection services)
