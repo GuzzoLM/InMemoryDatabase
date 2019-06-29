@@ -7,17 +7,18 @@
     using InMemoryDatabase.Exceptions;
     using InMemoryDatabase.Attributes;
     using InMemoryDatabase.Interfaces;
+    using InMemoryDatabase.Extensions;
 
     internal class InMemoryCollection<T> : IInMemoryCollection<T>
     {
         private IDictionary<string, T> _data { get; set; }
 
-        private IList<Func<T, string>> _idGenerator { get; set; }
+        private IList<Func<object, string>> _idGenerator { get; set; }
 
         public InMemoryCollection()
         {
             _data = new Dictionary<string, T>();
-            _idGenerator = GetIdGenerator();
+            _idGenerator = IdentifierExtensions.GetIdGenerator(typeof(T));
         }
 
         public string Save(T entity)
@@ -64,69 +65,7 @@
 
         private string GetId(T entity)
         {
-            var id = string.Empty;
-
-            foreach(var prop in _idGenerator)
-            {
-                var idProp = prop(entity);
-                id = string.IsNullOrEmpty(id)
-                    ? idProp
-                    : $"{id}-{idProp}";
-            }
-
-            return id;
-        }
-
-        private IList<Func<T, string>> GetIdGenerator()
-        {
-            var props = typeof(T)
-                .GetProperties()
-                .Where(prop => Attribute.IsDefined(prop, typeof(IdentifierAttribute)))
-                .GroupBy(prop => GetIdOrder(prop))
-                .ToDictionary(
-                    x => x.Key,
-                    x => (IEnumerable<PropertyInfo>)x.ToList());
-
-            Validate(props);
-
-            return props
-                .OrderBy(x => x.Key)
-                .SelectMany(x => x.Value)
-                .Select(prop => GetPropertyAccessor(prop))
-                .ToList();
-        }
-
-        private int GetIdOrder(PropertyInfo prop)
-        {
-            return ((IdentifierAttribute)Attribute.GetCustomAttribute(prop, typeof(IdentifierAttribute))).Order;
-        }
-
-        private Func<T, string> GetPropertyAccessor(PropertyInfo prop)
-        {
-            return (T x) => prop.GetValue(x).ToString();
-        }
-
-        private void Validate(IDictionary<int, IEnumerable<PropertyInfo>> props)
-        {
-            var properties = new List<string>();
-            var message = "Found identifier properties with same order number";
-
-            properties.AddRange(props
-                .Where(x => x.Value.Count() > 1)
-                .SelectMany(x => x.Value)
-                .Select(prop => prop.Name));
-
-            if (properties.Count > 0)
-            {
-                throw new InvalidIdentityException(message, properties.ToArray());
-            }
-
-            message = "Class must have an Identifier";
-
-            if (props.SelectMany(x => x.Value).Count() < 1)
-            {
-                throw new InvalidIdentityException(message);
-            }
+            return IdentifierExtensions.GetId(_idGenerator, entity);
         }
     }
 }
