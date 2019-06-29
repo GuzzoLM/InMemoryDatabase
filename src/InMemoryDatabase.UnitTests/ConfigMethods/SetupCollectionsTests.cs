@@ -3,7 +3,7 @@
     using System;
     using FluentAssertions;
     using InMemoryDatabase.Exceptions;
-    using InMemoryDatabase.Extensions;
+    using InMemoryDatabase.Setup;
     using InMemoryDatabase.Attributes;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;

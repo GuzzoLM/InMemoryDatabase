@@ -1,4 +1,4 @@
-﻿namespace InMemoryDatabase.Extensions
+﻿namespace InMemoryDatabase.Setup
 {
     using InMemoryDatabase.Interfaces;
     using Microsoft.Extensions.DependencyInjection;
