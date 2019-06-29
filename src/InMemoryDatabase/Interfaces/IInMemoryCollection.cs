@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
 
-    public interface IInMemoryCollection<T> where T : IEntity
+    public interface IInMemoryCollection<T>
     {
-        Guid Save(T entity);
+        string Save(T entity);
 
         T Update(T entity);
 
@@ -13,6 +13,6 @@
 
         IEnumerable<T> All();
 
-        void Delete(Guid id);
+        void Delete(string id);
     }
 }

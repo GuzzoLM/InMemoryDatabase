@@ -3,47 +3,48 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
+    using InMemoryDatabase.Exceptions;
+    using InMemoryDatabase.Identifier;
     using InMemoryDatabase.Interfaces;
 
-    internal class MemoryCollection<T> : IInMemoryCollection<T> where T : IEntity
+    public class MemoryCollection<T> : IInMemoryCollection<T>
     {
-        private IDictionary<Guid, T> _data { get; set; }
+        private IDictionary<string, T> _data { get; set; }
+
+        private IList<Func<T, string>> _idGenerator { get; set; }
 
         public MemoryCollection()
         {
-            _data = new Dictionary<Guid, T>();
+            _data = new Dictionary<string, T>();
+            _idGenerator = GetIdGenerator();
         }
 
-        public Guid Save(T entity)
+        public string Save(T entity)
         {
-            if (entity is IEntity idEntity)
-            {
-                _data.Add(idEntity.Id, entity);
-                return idEntity.Id;
-            }
+            var id = GetId(entity);
 
-            throw new ArgumentException("Cannot persist entities without Id");
+            _data.Add(id, entity);
+
+            return id;
         }
 
         public T Update(T entity)
         {
-            if (entity is IEntity idEntity)
-            {
-                IDictionary<Guid, T> old = new Dictionary<Guid, T>(_data);
-                try
-                {
-                    _data.Remove(idEntity.Id);
-                    _data.Add(idEntity.Id, entity);
-                    return entity;
-                }
-                catch
-                {
-                    _data = new Dictionary<Guid, T>(old);
-                    throw;
-                }
-            }
+            var id = GetId(entity);
 
-            throw new ArgumentException("Cannot persist entities without Id");
+            IDictionary<string, T> old = new Dictionary<string, T>(_data);
+            try
+            {
+                _data.Remove(id);
+                _data.Add(id, entity);
+                return entity;
+            }
+            catch
+            {
+                _data = new Dictionary<string, T>(old);
+                throw;
+            }
         }
 
         public IEnumerable<T> Where(Func<T, bool> filter)
@@ -56,9 +57,69 @@
             return _data.Values;
         }
 
-        public void Delete(Guid id)
+        public void Delete(string id)
         {
             _data.Remove(id);
+        }
+
+        private string GetId(T entity)
+        {
+            var id = string.Empty;
+
+            foreach(var prop in _idGenerator)
+            {
+                var idProp = prop(entity);
+                id = string.IsNullOrEmpty(id)
+                    ? idProp
+                    : $"{id}-{idProp}";
+            }
+
+            return id;
+        }
+
+        private IList<Func<T, string>> GetIdGenerator()
+        {
+            var props = typeof(T)
+                .GetProperties()
+                .Where(prop => Attribute.IsDefined(prop, typeof(IdentifierAttribute)))
+                .GroupBy(prop => GetIdOrder(prop))
+                .ToDictionary(
+                    x => x.Key,
+                    x => (IEnumerable<PropertyInfo>)x.ToList());
+
+            Validate(props);
+
+            return props
+                .OrderBy(x => x.Key)
+                .SelectMany(x => x.Value)
+                .Select(prop => GetPropertyAccessor(prop))
+                .ToList();
+        }
+
+        private int GetIdOrder(PropertyInfo prop)
+        {
+            return ((IdentifierAttribute)Attribute.GetCustomAttribute(prop, typeof(IdentifierAttribute))).Order;
+        }
+
+        private Func<T, string> GetPropertyAccessor(PropertyInfo prop)
+        {
+            return (T x) => prop.GetValue(x).ToString();
+        }
+
+        private void Validate(IDictionary<int, IEnumerable<PropertyInfo>> props)
+        {
+            var properties = new List<string>();
+            var message = "Found identifier properties with same order number";
+
+            properties.AddRange(props
+                .Where(x => x.Value.Count() > 1)
+                .SelectMany(x => x.Value)
+                .Select(prop => prop.Name));
+
+            if (properties.Count > 0)
+            {
+                throw new InvalidIdentityException(message, properties.ToArray());
+            }
         }
     }
 }
