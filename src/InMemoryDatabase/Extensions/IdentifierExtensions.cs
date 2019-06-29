@@ -1,72 +1,25 @@
-﻿namespace InMemoryDatabase
+﻿namespace InMemoryDatabase.Extensions
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using InMemoryDatabase.Exceptions;
     using InMemoryDatabase.Attributes;
-    using InMemoryDatabase.Interfaces;
+    using InMemoryDatabase.Exceptions;
 
-    internal class InMemoryCollection<T> : IInMemoryCollection<T>
+    public static class IdentifierExtensions
     {
-        private IDictionary<string, T> _data { get; set; }
-
-        private IList<Func<T, string>> _idGenerator { get; set; }
-
-        public InMemoryCollection()
+        public static string GetIdentifier(this object entity)
         {
-            _data = new Dictionary<string, T>();
-            _idGenerator = GetIdGenerator();
+            var generator = GetIdGenerator(entity.GetType());
+            return GetId(generator, entity);
         }
 
-        public string Save(T entity)
-        {
-            var id = GetId(entity);
-
-            _data.Add(id, entity);
-
-            return id;
-        }
-
-        public T Update(T entity)
-        {
-            var id = GetId(entity);
-
-            IDictionary<string, T> old = new Dictionary<string, T>(_data);
-            try
-            {
-                _data.Remove(id);
-                _data.Add(id, entity);
-                return entity;
-            }
-            catch
-            {
-                _data = new Dictionary<string, T>(old);
-                throw;
-            }
-        }
-
-        public IEnumerable<T> Where(Func<T, bool> filter)
-        {
-            return _data.Values.Where(filter);
-        }
-
-        public IEnumerable<T> All()
-        {
-            return _data.Values;
-        }
-
-        public void Delete(string id)
-        {
-            _data.Remove(id);
-        }
-
-        private string GetId(T entity)
+        internal static string GetId(IList<Func<object, string>> generator, object entity)
         {
             var id = string.Empty;
 
-            foreach(var prop in _idGenerator)
+            foreach (var prop in generator)
             {
                 var idProp = prop(entity);
                 id = string.IsNullOrEmpty(id)
@@ -77,9 +30,9 @@
             return id;
         }
 
-        private IList<Func<T, string>> GetIdGenerator()
+        internal static IList<Func<object, string>> GetIdGenerator(Type type)
         {
-            var props = typeof(T)
+            var props = type
                 .GetProperties()
                 .Where(prop => Attribute.IsDefined(prop, typeof(IdentifierAttribute)))
                 .GroupBy(prop => GetIdOrder(prop))
@@ -96,17 +49,17 @@
                 .ToList();
         }
 
-        private int GetIdOrder(PropertyInfo prop)
+        private static int GetIdOrder(PropertyInfo prop)
         {
             return ((IdentifierAttribute)Attribute.GetCustomAttribute(prop, typeof(IdentifierAttribute))).Order;
         }
 
-        private Func<T, string> GetPropertyAccessor(PropertyInfo prop)
+        private static Func<object, string> GetPropertyAccessor(PropertyInfo prop)
         {
-            return (T x) => prop.GetValue(x).ToString();
+            return x => prop.GetValue(x).ToString();
         }
 
-        private void Validate(IDictionary<int, IEnumerable<PropertyInfo>> props)
+        private static void Validate(IDictionary<int, IEnumerable<PropertyInfo>> props)
         {
             var properties = new List<string>();
             var message = "Found identifier properties with same order number";

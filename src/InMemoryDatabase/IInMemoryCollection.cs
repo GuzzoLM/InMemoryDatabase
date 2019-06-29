@@ -1,4 +1,4 @@
-﻿namespace InMemoryDatabase.Interfaces
+﻿namespace InMemoryDatabase
 {
     using System;
     using System.Collections.Generic;
