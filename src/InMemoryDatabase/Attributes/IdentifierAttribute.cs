@@ -2,6 +2,9 @@
 {
     using System;
 
+    /// <summary>
+    /// Mark a property as part of the class unique identifier.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = true)]
     public class IdentifierAttribute : Attribute
     {
