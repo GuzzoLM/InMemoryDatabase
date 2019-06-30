@@ -6,7 +6,7 @@ Do not use it on production environments, as its data is bounded to a single ins
 
 ## Installation
 
-![Nuget](https://img.shields.io/nuget/v/InMemoryDatabase.svg)
+[![Nuget](https://img.shields.io/nuget/v/InMemoryDatabase.svg)](https://www.nuget.org/packages/InMemoryDatabase)
 
 InMemoryDatabase runs on Windows, Linux, and macOS using [.NET Core](https://github.com/dotnet/core).
 
