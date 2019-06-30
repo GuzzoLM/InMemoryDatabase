@@ -4,14 +4,23 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// The exception that is thrown when an entity has invalid identifier settings
+    /// </summary>
     public class InvalidIdentityException : SystemException
     {
         private string _message { get; set; }
 
+        /// <summary>
+        /// More details about the exception.
+        /// </summary>
         public override string Message => _message;
 
         private IList<string> _properties { get; set; }
 
+        /// <summary>
+        /// Properties that are related with the exception.
+        /// </summary>
         public IList<string> Properties => _properties.ToList();
 
         public InvalidIdentityException(string message, params string[] properties)
