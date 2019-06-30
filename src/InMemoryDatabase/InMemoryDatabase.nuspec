@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Official releas. Has documentation.</releaseNotes>
+    <copyright>Copyright (c) 2019 GuzzoLM</copyright>
+	<license type="expression">MIT</license>
+	<repository type="git" url="https://github.com/GuzzoLM/InMemoryDatabase" commit="f6bb65b5a777ead1dea329f4d7a3052293a4e183" />
+    <tags>in-memory database</tags>
+	<dependencies>
+		<dependency id="NETStandard.Library" version="2.0.3" />
+		<dependency id="Microsoft.Extensions.DependencyInjection" version="2.1.0" />
+	</dependencies>
+  </metadata>
+</package>
