@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>InMemoryDatabase</id>
+    <version>0.1.0</version>
+    <title>InMemoryDatabase</title>
+    <authors>GuzzoLM</authors>
+    <owners>GuzzoLM</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>A lightweight in-memory database to be used for tests and development environments.</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright (c) 2019 GuzzoLM</copyright>
+	<license type="expression">MIT</license>
+	<repository url="https://github.com/GuzzoLM/InMemoryDatabase" />
+    <tags>in-memory database</tags>
+  </metadata>
+</package>

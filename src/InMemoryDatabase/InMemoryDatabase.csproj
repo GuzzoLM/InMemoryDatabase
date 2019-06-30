@@ -1,7 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <ApplicationIcon />
+    <Win32Resource />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <Authors>GuzzoLM</Authors>
+    <Description>A lightweight in-memory database to be used for tests and development environments.</Description>
+    <RepositoryUrl>https://github.com/GuzzoLM/InMemoryDatabase</RepositoryUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <Copyright>Copyright (c) 2019 GuzzoLM</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
