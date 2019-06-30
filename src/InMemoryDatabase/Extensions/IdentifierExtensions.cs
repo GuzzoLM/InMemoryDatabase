@@ -9,6 +9,9 @@
 
     public static class IdentifierExtensions
     {
+        /// <summary>
+        /// Get the calculated unique identifier for an entity.
+        /// </summary>
         public static string GetIdentifier(this object entity)
         {
             var generator = GetIdGenerator(entity.GetType());
